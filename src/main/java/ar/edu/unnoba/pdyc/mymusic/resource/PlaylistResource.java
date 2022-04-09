@@ -4,26 +4,17 @@ import ar.edu.unnoba.pdyc.mymusic.dto.PlaylistDTO;
 import ar.edu.unnoba.pdyc.mymusic.dto.PlaylistWithSongsDTO;
 import ar.edu.unnoba.pdyc.mymusic.dto.PlaylistsSongsDTO;
 import ar.edu.unnoba.pdyc.mymusic.dto.SongDTO;
-import ar.edu.unnoba.pdyc.mymusic.model.Playlist;
-import ar.edu.unnoba.pdyc.mymusic.model.Song;
 import ar.edu.unnoba.pdyc.mymusic.service.PlaylistService;
 import ar.edu.unnoba.pdyc.mymusic.service.Utils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import javax.annotation.Resource;
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 /*

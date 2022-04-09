@@ -3,18 +3,14 @@ package ar.edu.unnoba.pdyc.mymusic.service;
 import ar.edu.unnoba.pdyc.mymusic.dto.PlaylistDTO;
 import ar.edu.unnoba.pdyc.mymusic.model.Playlist;
 import ar.edu.unnoba.pdyc.mymusic.model.Song;
-import org.springframework.scheduling.annotation.Async;
-
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
 
 public interface PlaylistService {
 
     List<Playlist>getPlaylists();
     List<Song> getSongsByPlaylistId(long id);
     String getNameById(long id);
-    long getOwner(long id);
     void deletePlaylist(long id);
     long getIdByPlaylistIdAndSongId(long plId, long sId);
     Playlist create(PlaylistDTO playlistDTO, String loggedEmail);

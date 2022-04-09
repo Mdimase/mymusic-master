@@ -4,6 +4,6 @@ import ar.edu.unnoba.pdyc.mymusic.model.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService extends UserDetailsService {
-    public User findByEmail(String email);
-    public User findById(long id);
+    User findByEmail(String email);
+    User findById(long id);
 }

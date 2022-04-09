@@ -1,12 +1,10 @@
 package ar.edu.unnoba.pdyc.mymusic.model;
 
-import org.dom4j.tree.AbstractEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -91,13 +89,10 @@ public class User implements UserDetails {
     public boolean equals(Object obj){
         if(obj == null){
             return false;
-        } else if (!(obj instanceof User)){ //sino no es un user
+        } else //mismos id en BD -> mismo objeto
+            if (!(obj instanceof User)){ //sino no es un user
             return false;
-        } else if (((User) obj).id.equals(this.id)){    //mismos id en BD -> mismo objeto
-            return true;
-        } else {
-            return false;
-        }
+        } else return ((User) obj).id.equals(this.id);
     }
 
 }
