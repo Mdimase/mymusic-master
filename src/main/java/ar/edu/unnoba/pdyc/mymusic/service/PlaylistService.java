@@ -10,6 +10,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 public interface PlaylistService {
+
     List<Playlist>getPlaylists();
     List<Song> getSongsByPlaylistId(long id);
     String getNameById(long id);
