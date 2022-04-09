@@ -38,20 +38,40 @@ public class PlaylistServiceImp implements PlaylistService{
         return playlistRepository.findAll();
     }
 
+    @Override
+    public List<Song> getSongsByPlaylistId(long id) {
+        return playlistRepository.getSongsByPlaylistId(id);
+    }
+
     //implementacion metodo asincronico para obtener todas las playlists
     @Override
     @Async("taskExecutor")
     public CompletableFuture<List<Playlist>> getPlaylistsAsync() {
-        return CompletableFuture.completedFuture(playlistRepository.findAll());
+        return CompletableFuture.completedFuture(getPlaylists());
+    }
+
+    //implementacion metodo asincronico para obtener uan playlist con sus canciones
+    @Override
+    @Async("taskExecutor")
+    public CompletableFuture<List<Song>> getSongsByPlaylistIdAsync(long id) {
+        return CompletableFuture.completedFuture(getSongsByPlaylistId(id));
+    }
+
+    //implementacion metodo asincronico para crear una playlist
+    @Override
+    @Async("taskExecutor")
+    public void createAsync(PlaylistDTO playlistDTO, String loggedEmail) {
+        CompletableFuture.completedFuture(create(playlistDTO,loggedEmail));
     }
 
     @Override
-    public void create(PlaylistDTO playlistDTO, String loggedEmail){
+    public Playlist create(PlaylistDTO playlistDTO, String loggedEmail){
         User userLogged = userRepository.findByEmail(loggedEmail);
         Playlist playlist = new Playlist();
         playlist.setName(playlistDTO.getName());
         playlist.setUser(userLogged);
         playlistRepository.save(playlist);
+        return playlist;
     }
 
     @Override
@@ -106,11 +126,6 @@ public class PlaylistServiceImp implements PlaylistService{
         } else {
             throw new Exception("no podes borrar una playlist de la que no sos el dueño");
         }
-    }
-
-    @Override
-    public List<Song> getSongsByPlaylistId(long id) {
-        return playlistRepository.getSongsByPlaylistId(id);
     }
 
     @Override

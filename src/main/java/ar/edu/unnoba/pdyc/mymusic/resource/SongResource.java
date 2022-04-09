@@ -22,11 +22,12 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 /*
-URI para retornar listado de canciones es
-GET http://localhost:8080/mymusic/songs         lista de canciones
-POST http://localhost:8080/mymusic/songs        nueva cancion
-PUT http://localhost:8080/mymusic/songs/:id     actualizo la cancion = id
-DELETE http://localhost:8080/mymusic/songs/:id  borra la cancion = id
+                        URI area
+GET http://localhost:8080/mymusic/songs                                 lista de canciones
+GET http://localhost:8080/mymusic/songs?author=value&genre=value        lista de canciones
+POST http://localhost:8080/mymusic/songs                                nueva cancion
+PUT http://localhost:8080/mymusic/songs/:id                             actualizo la cancion = id
+DELETE http://localhost:8080/mymusic/songs/:id                          borra la cancion = id
  */
 
 @Path("/songs")
@@ -35,26 +36,50 @@ public class SongResource {
     @Autowired
     private SongService songService;
 
+    /********************************************
+                    metodos sincronicos
+
+
     //consultar canciones con filtro por autor y genero
-    /*@GET
-    @Produces(MediaType.APPLICATION_JSON)
+    //@GET
+    //@Produces(MediaType.APPLICATION_JSON)
     public Response getSongsByAuthorGenre(@QueryParam("author") String author, @QueryParam("genre") Genre genre) {
         ModelMapper modelMapper = new ModelMapper();
         Type listType = new TypeToken<List<SongDTO>>() {
         }.getType();
         List<SongDTO> list = modelMapper.map(songService.getSongsByAuthorGenre(author, genre), listType);
         return Response.ok(list).build();
-    }*/
+    }
+
+    ********************************************/
+
+
+    /********************************************
+                metodos asincronos
+     ********************************************/
+
+    //metodo asincronico para obtener todas las canciones con filtro por autor y genero
+    @GET
+    @Path("/filter")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void getSongsByAuthorGenre(@Suspended AsyncResponse response, @QueryParam("author") String author, @QueryParam("genre") Genre genre){
+        songService.getSongsAsync(author,genre).thenAccept((list) -> {
+            ModelMapper modelMapper = new ModelMapper();
+            Type listType = new TypeToken<List<SongDTO>>(){}.getType();
+            List<SongDTO> listDto = modelMapper.map(list, listType);
+            response.resume(Response.ok(listDto).build());
+        });
+    }
 
     //metodo asincronico para obtener todas las canciones
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public void getSongsByAuthorGenre(@Suspended AsyncResponse response, @QueryParam("author") String author, @QueryParam("genre") Genre genre){
+    public void getSongsByAuthorGenre(@Suspended AsyncResponse response){
         songService.getSongsAsync().thenAccept((list) -> {
             ModelMapper modelMapper = new ModelMapper();
             Type listType = new TypeToken<List<SongDTO>>(){}.getType();
-            List<SongDTO> l = modelMapper.map(songService.getSongsByAuthorGenre(author, genre), listType);
-            response.resume(Response.ok(l).build());
+            List<SongDTO> listDto = modelMapper.map(list, listType);
+            response.resume(Response.ok(listDto).build());
         });
     }
 

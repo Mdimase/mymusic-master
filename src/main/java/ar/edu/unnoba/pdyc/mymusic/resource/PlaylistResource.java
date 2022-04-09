@@ -7,6 +7,7 @@ import ar.edu.unnoba.pdyc.mymusic.dto.SongDTO;
 import ar.edu.unnoba.pdyc.mymusic.model.Playlist;
 import ar.edu.unnoba.pdyc.mymusic.model.Song;
 import ar.edu.unnoba.pdyc.mymusic.service.PlaylistService;
+import ar.edu.unnoba.pdyc.mymusic.service.Utils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ import java.util.List;
 
 /*
 GET http://localhost:8080/mymusic/playlists                   lista de playlists (sin canciones)
+GET http://localhost:8080/mymusic/playlists/:id               lista de playlists (con canciones)
 POST http://localhost:8080/mymusic/playlists                  nueva playlist
 PUT http://localhost:8080/mymusic/playlists/:id               actualizo la playlist = id
 DELETE http://localhost:8080/mymusic/playlists/:id            borra la playlist = id
@@ -35,14 +37,21 @@ DELETE http://localhost:8080/mymusic/playlists/:id/songs/:id            borra un
 DELETE http://localhost:8080/mymusic/playlists/:id            borra una playlist
  */
 
+//el .map(objeto a convertir el cual sirve de fuente de datos, el tipo al que quiero que lo convierta)
+
 @Path("/playlists")
 public class PlaylistResource {
 
     @Autowired
     private PlaylistService playlistService;
 
+    private Utils utils = new Utils();
+
+    /********************************************
+     *              metodos sincronos
+     *******************************************/
+
     // obtener todas las playlists (sin canciones)
-    //cambiado a metodo asincronico
 
     /*@GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -53,18 +62,19 @@ public class PlaylistResource {
         return Response.ok(list).build();
     }*/
 
-    //metodo asincronico para obtener todas las playlists
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public void getPlaylist(@Suspended AsyncResponse response) {
-        playlistService.getPlaylistsAsync().thenAccept((list) -> {
-            ModelMapper modelMapper = new ModelMapper();
-            Type listType = new TypeToken<List<PlaylistDTO>>(){}.getType();
-            List<PlaylistDTO> l = modelMapper.map(list, listType);
-            response.resume(Response.ok(l).build());
-        });
+    /*
+    // crear una playlist
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createPlaylist(PlaylistDTO playlistDTO){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication(); //contexto de seguridad de spring
+        String loggedEmail = (String) auth.getPrincipal();   //email del usuario loggeado
+        playlistService.create(playlistDTO,loggedEmail);
+        return Response.status(Response.Status.CREATED).build();
     }
+    */
 
+    /*
     //info de una playlist (incluye todas sus canciones)
     @GET
     @Path("/{id}")
@@ -79,16 +89,48 @@ public class PlaylistResource {
         playlistWithSongsDTO.setSongs(listSongsDTO);
         return Response.ok(playlistWithSongsDTO).build();
     }
+    */
+
+    /********************************************
+     *              metodos asincronos
+     *******************************************/
+
+    //metodo asincronico para obtener todas las playlists
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public void getPlaylist(@Suspended AsyncResponse response) {
+        playlistService.getPlaylistsAsync().thenAccept((list) -> {
+            ModelMapper modelMapper = new ModelMapper();
+            Type listType = new TypeToken<List<PlaylistDTO>>(){}.getType();
+            List<PlaylistDTO> listDto = modelMapper.map(list,listType);
+            response.resume(Response.ok(listDto).build());
+        });
+    }
 
     // crear una playlist
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createPlaylist(PlaylistDTO playlistDTO){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication(); //contexto de seguridad de spring
-        String loggedEmail = (String) auth.getPrincipal();   //email del usuario loggeado
-        playlistService.create(playlistDTO,loggedEmail);
-        return Response.status(Response.Status.CREATED).build();
+    public void createPlaylist(@Suspended AsyncResponse response,PlaylistDTO playlistDTO){
+        playlistService.createAsync(playlistDTO,utils.getEmailLogged());
+        response.resume(Response.status(Response.Status.CREATED).build());
     }
+
+    //info de una playlist (incluye todas sus canciones)
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void getPlaylistById(@Suspended AsyncResponse response,@PathParam("id") long id){
+        ModelMapper modelMapper = new ModelMapper();
+        PlaylistWithSongsDTO playlistWithSongsDTO = new PlaylistWithSongsDTO(); //creo el DTO a retornar
+        Type listSongDTOType = new TypeToken<List<SongDTO>>(){}.getType(); //armo el tipo lista de songsDTO (sin el id)
+        playlistWithSongsDTO.setPlaylistName(playlistService.getNameById(id));  // le seteo el nombre de la playlist
+        playlistService.getSongsByPlaylistIdAsync(id).thenAccept((list) -> {
+            List<SongDTO> listSongsDTO = modelMapper.map(list,listSongDTOType); // creo la lista de songsdto
+            playlistWithSongsDTO.setSongs(listSongsDTO);
+            response.resume(Response.ok(playlistWithSongsDTO).build()) ;
+        });
+    }
+
 
     @PUT
     @Path("/{id}")

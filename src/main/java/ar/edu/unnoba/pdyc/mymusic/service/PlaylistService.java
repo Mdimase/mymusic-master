@@ -16,11 +16,13 @@ public interface PlaylistService {
     public long getOwner(long id);
     public void deletePlaylist (long id);
     public long getIdByPlaylistIdAndSongId(long plId, long sId);
-    public void create(PlaylistDTO playlistDTO, String loggedEmail);
+    public Playlist create(PlaylistDTO playlistDTO, String loggedEmail);
     public void update(long id, PlaylistDTO playlistDTO,String loggedEmail) throws Exception;
     public void addSong(long idPlaylist,Long idSong,String loggedEmail) throws Exception;
     public void deleteSong(long idPlaylist, long idSong, String loggedEmail) throws Exception;
     public void delete(long idPlaylist,String loggedEmail) throws Exception;
     //metodo asincronico
     public CompletableFuture<List<Playlist>> getPlaylistsAsync();
+    public void createAsync(PlaylistDTO playlistDTO, String loggedEmail);
+    public CompletableFuture<List<Song>> getSongsByPlaylistIdAsync(long id);
 }

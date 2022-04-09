@@ -11,6 +11,7 @@ public interface SongService {
     public List<Song> getSongs();
     public List<Song> getSongsByAuthorGenre(String author, Genre genre);
     //metodo asincronico
+    public CompletableFuture<List<Song>> getSongsAsync(String author,Genre genre);
     public CompletableFuture<List<Song>> getSongsAsync();
 
     /**********************************

@@ -20,6 +20,6 @@ public class UserServiceImp implements UserService{
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return (UserDetails) this.findByEmail(email);
+        return this.findByEmail(email);
     }
 }

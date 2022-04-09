@@ -27,16 +27,17 @@ import static ar.edu.unnoba.pdyc.mymusic.security.SecurityConstants.TOKEN_PREFIX
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
     private final AuthenticationManager authenticationManager;
 
+    // POST http://localhost:8080/mymusic/auth          login
+
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager){
         this.authenticationManager = authenticationManager;
-        setFilterProcessesUrl("/login");    // en que ruta interviene este filtro
+        setFilterProcessesUrl("/auth");    // en que ruta interviene este filtro
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
-            AuthenticationRequestDTO auth = new ObjectMapper()
-                .readValue(request.getInputStream(),AuthenticationRequestDTO.class);
+            AuthenticationRequestDTO auth = new ObjectMapper().readValue(request.getInputStream(),AuthenticationRequestDTO.class);
 
             System.out.println(new BCryptPasswordEncoder().encode(auth.getPassword()));
 
