@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JerseyConfig extends ResourceConfig
 {
+    // listado de resources de la app
     public JerseyConfig()
     {
         register(SongResource.class);

@@ -20,8 +20,8 @@ import java.util.Collections;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private UserService userService;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;    //para encryptar la password en la BD, y no ponerla en texto plano
+    private final UserService userService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;    //para encryptar la password en la BD, y no ponerla en texto plano
 
     public SecurityConfiguration (UserService userService,BCryptPasswordEncoder bCryptPasswordEncoder ){
         this.userService = userService;

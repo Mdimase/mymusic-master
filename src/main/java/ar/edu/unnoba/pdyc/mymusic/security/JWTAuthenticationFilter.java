@@ -25,7 +25,7 @@ import static ar.edu.unnoba.pdyc.mymusic.security.SecurityConstants.SECRET;
 import static ar.edu.unnoba.pdyc.mymusic.security.SecurityConstants.TOKEN_PREFIX;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager){
         this.authenticationManager = authenticationManager;
