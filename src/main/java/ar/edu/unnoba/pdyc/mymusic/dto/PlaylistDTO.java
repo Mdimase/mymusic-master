@@ -1,7 +1,5 @@
 package ar.edu.unnoba.pdyc.mymusic.dto;
 
-import ar.edu.unnoba.pdyc.mymusic.model.User;
-
 public class PlaylistDTO {
     private String name;
     //posible agregada de nombre de usuario owner. preguntarle al profe

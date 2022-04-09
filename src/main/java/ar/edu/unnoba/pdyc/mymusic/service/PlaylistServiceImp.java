@@ -8,13 +8,9 @@ import ar.edu.unnoba.pdyc.mymusic.model.User;
 import ar.edu.unnoba.pdyc.mymusic.repository.PlaylistRepository;
 import ar.edu.unnoba.pdyc.mymusic.repository.PlaylistsSongsRepository;
 import ar.edu.unnoba.pdyc.mymusic.repository.SongRepository;
-import ar.edu.unnoba.pdyc.mymusic.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -182,16 +178,9 @@ public class PlaylistServiceImp implements PlaylistService{
         }
     }
 
-
-
     @Override
     public String getNameById(long id) {
         return playlistRepository.getNameById(id);
-    }
-
-    @Override
-    public long getOwner(long id){
-        return playlistRepository.getOwner(id);
     }
 
     @Override

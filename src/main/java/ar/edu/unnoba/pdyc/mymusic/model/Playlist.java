@@ -57,12 +57,9 @@ public class Playlist {
     public boolean equals(Object obj){
         if(obj == null){
             return false;
-        } else if (!(obj instanceof Playlist)){ //sino no es un user
+        } else //mismos id en BD -> mismo objeto
+            if (!(obj instanceof Playlist)){
             return false;
-        } else if (((Playlist) obj).id.equals(this.id)){    //mismos id en BD -> mismo objeto
-            return true;
-        } else {
-            return false;
-        }
+        } else return ((Playlist) obj).id.equals(this.id);
     }
 }
