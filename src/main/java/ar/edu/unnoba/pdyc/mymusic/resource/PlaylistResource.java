@@ -27,6 +27,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*
+*   TO DO
+*   HACER EL SIGNUP ENDPOINT
+*   EL PAGINADO
+*
+*
+* */
+
+
+/*
 GET http://localhost:8080/mymusic/playlists                   lista de playlists (sin canciones)
 GET http://localhost:8080/mymusic/playlists/:id               lista de playlists (con canciones)
 POST http://localhost:8080/mymusic/playlists                  nueva playlist
@@ -45,7 +54,8 @@ public class PlaylistResource {
     @Autowired
     private PlaylistService playlistService;
 
-    private Utils utils = new Utils();
+    @Autowired
+    private Utils utils;
 
     /********************************************
      *              metodos sincronos
@@ -90,6 +100,70 @@ public class PlaylistResource {
         return Response.ok(playlistWithSongsDTO).build();
     }
     */
+    /*
+    @PUT
+    @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updatePlaylist (@PathParam("id")long id,PlaylistDTO playlistDTO){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String loggedEmail = (String) auth.getPrincipal();
+        try{
+            playlistService.update(id,playlistDTO,loggedEmail);
+            return Response.ok().build();
+        } catch (Exception e){
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+    }*/
+
+    /*
+    @POST
+    @Path("/{id}/songs")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addSongInPlaylist(@PathParam("id") long idPlaylist, PlaylistsSongsDTO playlistsSongsDTO){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String loggedEmail = (String) auth.getPrincipal();
+        Long idSong = Long.valueOf(playlistsSongsDTO.getId());
+        try {
+            playlistService.addSong(idPlaylist,idSong,loggedEmail);
+            return Response.status(Response.Status.CREATED).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+    }
+     */
+
+    /*
+    * @DELETE
+    @Path("/{idPlaylist}/songs/{idSong}")
+    public Response deleteSongInPlaylist(@PathParam("idPlaylist") long idPlaylist,@PathParam("idSong") long idSong){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String loggedEmail = (String) auth.getPrincipal();
+        try{
+            playlistService.deleteSong(idPlaylist,idSong,loggedEmail);
+            return Response.ok().build();
+        } catch (Exception e){
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+    }
+    *
+    * @DELETE
+    @Path("/{idPlaylist}")
+    public Response delete(@PathParam("idPlaylist") long idPlaylist){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String loggedEmail = (String) auth.getPrincipal();
+        try{
+            playlistService.delete(idPlaylist,loggedEmail);
+            return Response.ok().build();
+        } catch (Exception e){
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+    }
+    *
+    *
+    *
+    *
+    * */
+
 
     /********************************************
      *              metodos asincronos
@@ -111,8 +185,9 @@ public class PlaylistResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public void createPlaylist(@Suspended AsyncResponse response,PlaylistDTO playlistDTO){
-        playlistService.createAsync(playlistDTO,utils.getEmailLogged());
-        response.resume(Response.status(Response.Status.CREATED).build());
+        playlistService.createAsync(playlistDTO,utils.getEmailLogged()).thenAccept((res) ->{
+            response.resume(Response.status(Response.Status.CREATED).build());
+        });
     }
 
     //info de una playlist (incluye todas sus canciones)
@@ -123,67 +198,92 @@ public class PlaylistResource {
         ModelMapper modelMapper = new ModelMapper();
         PlaylistWithSongsDTO playlistWithSongsDTO = new PlaylistWithSongsDTO(); //creo el DTO a retornar
         Type listSongDTOType = new TypeToken<List<SongDTO>>(){}.getType(); //armo el tipo lista de songsDTO (sin el id)
-        playlistWithSongsDTO.setPlaylistName(playlistService.getNameById(id));  // le seteo el nombre de la playlist
-        playlistService.getSongsByPlaylistIdAsync(id).thenAccept((list) -> {
-            List<SongDTO> listSongsDTO = modelMapper.map(list,listSongDTOType); // creo la lista de songsdto
-            playlistWithSongsDTO.setSongs(listSongsDTO);
-            response.resume(Response.ok(playlistWithSongsDTO).build()) ;
+        playlistService.getNameByIdAsync(id).thenAccept((res) ->{
+            if(res != null){
+                playlistWithSongsDTO.setPlaylistName(res);  // le seteo el nombre de la playlist
+                playlistService.getSongsByPlaylistIdAsync(id).thenAccept((list) -> {
+                    List<SongDTO> listSongsDTO = modelMapper.map(list,listSongDTOType); // creo la lista de songsdto
+                    playlistWithSongsDTO.setSongs(listSongsDTO);
+                    response.resume(Response.ok(playlistWithSongsDTO).build()) ;
+                });
+            }
+            else{
+                response.resume(Response.status(Response.Status.NOT_FOUND).build());
+            }
         });
     }
 
-
+    // modificar el nombre de una playlist
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updatePlaylist (@PathParam("id")long id,PlaylistDTO playlistDTO){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String loggedEmail = (String) auth.getPrincipal();
+    public void updatePlaylist (@Suspended AsyncResponse response,@PathParam("id")long id,PlaylistDTO playlistDTO){
         try{
-        playlistService.update(id,playlistDTO,loggedEmail);
-        return Response.ok().build();
+            playlistService.updateAsync(id,playlistDTO,utils.getEmailLogged()).thenAccept((res)->{
+                if(res!=null){
+                    response.resume(Response.ok().build());
+                }
+                else{
+                    response.resume(Response.status(Response.Status.NOT_FOUND).build());
+                }
+            });
         } catch (Exception e){
-            return Response.status(Response.Status.FORBIDDEN).build();
+            response.resume(Response.status(Response.Status.FORBIDDEN).build());
         }
     }
 
+
+    // metodo asincrono para agregar una cancion a una playlist
     @POST
     @Path("/{id}/songs")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addSongInPlaylist(@PathParam("id") long idPlaylist, PlaylistsSongsDTO playlistsSongsDTO){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String loggedEmail = (String) auth.getPrincipal();
+    public void addSongInPlaylist(@Suspended AsyncResponse response,@PathParam("id") long idPlaylist, PlaylistsSongsDTO playlistsSongsDTO){
         Long idSong = Long.valueOf(playlistsSongsDTO.getId());
         try {
-            playlistService.addSong(idPlaylist,idSong,loggedEmail);
-            return Response.status(Response.Status.CREATED).build();
+            playlistService.addSongAsync(idPlaylist,idSong,utils.getEmailLogged()).thenAccept((res) ->{
+                if(res!=null){
+                    response.resume(Response.status(Response.Status.CREATED).build());
+                }
+                else{
+                    response.resume(Response.status(Response.Status.NOT_FOUND).build());
+                }
+            });
         } catch (Exception e) {
-            return Response.status(Response.Status.FORBIDDEN).build();
+            response.resume(Response.status(Response.Status.FORBIDDEN).build());
         }
     }
 
     @DELETE
     @Path("/{idPlaylist}/songs/{idSong}")
-    public Response deleteSongInPlaylist(@PathParam("idPlaylist") long idPlaylist,@PathParam("idSong") long idSong){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String loggedEmail = (String) auth.getPrincipal();
+    public void deleteSongInPlaylist(@Suspended AsyncResponse response,@PathParam("idPlaylist") long idPlaylist,@PathParam("idSong") long idSong){
         try{
-            playlistService.deleteSong(idPlaylist,idSong,loggedEmail);
-            return Response.ok().build();
-        } catch (Exception e){
-            return Response.status(Response.Status.FORBIDDEN).build();
+            playlistService.deleteSongAsync(idPlaylist,idSong, utils.getEmailLogged()).thenAccept((res) ->{
+                if(res != null){
+                    response.resume(Response.ok().build());
+                }
+                else{
+                    response.resume(Response.status(Response.Status.NOT_FOUND).build());
+                }
+            });
+        }catch(Exception e){
+            response.resume(Response.status(Response.Status.FORBIDDEN).build());
         }
     }
 
     @DELETE
     @Path("/{idPlaylist}")
-    public Response delete(@PathParam("idPlaylist") long idPlaylist){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String loggedEmail = (String) auth.getPrincipal();
+    public void delete(@Suspended AsyncResponse response,@PathParam("idPlaylist") long idPlaylist){
         try{
-            playlistService.delete(idPlaylist,loggedEmail);
-            return Response.ok().build();
+            playlistService.deletePlaylistAsync(idPlaylist, utils.getEmailLogged()).thenAccept((res)->{
+               if(res != null){
+                   response.resume(Response.ok().build());
+               }
+               else{
+                   response.resume(Response.status(Response.Status.NOT_FOUND).build());
+               }
+            });
         } catch (Exception e){
-            return Response.status(Response.Status.FORBIDDEN).build();
+            response.resume(Response.status(Response.Status.FORBIDDEN).build());
         }
     }
 

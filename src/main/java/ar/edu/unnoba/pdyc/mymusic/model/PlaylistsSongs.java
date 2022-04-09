@@ -10,11 +10,11 @@ public class PlaylistsSongs {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="playlist_id")
     private Playlist playlist;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="song_id")
     private Song song;
 

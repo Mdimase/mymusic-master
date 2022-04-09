@@ -22,10 +22,13 @@ import java.util.concurrent.CompletableFuture;
 public class PlaylistServiceImp implements PlaylistService{
 
     @Autowired
+    private Utils utils;
+
+    @Autowired
     private SongRepository songRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
     private PlaylistRepository playlistRepository;
@@ -60,13 +63,27 @@ public class PlaylistServiceImp implements PlaylistService{
     //implementacion metodo asincronico para crear una playlist
     @Override
     @Async("taskExecutor")
-    public void createAsync(PlaylistDTO playlistDTO, String loggedEmail) {
-        CompletableFuture.completedFuture(create(playlistDTO,loggedEmail));
+    public CompletableFuture<Playlist> createAsync(PlaylistDTO playlistDTO, String loggedEmail) {
+        return CompletableFuture.completedFuture(create(playlistDTO,loggedEmail));
+    }
+
+    //implementacion metodo asincronico para modificar el nombre de una playlist
+    @Override
+    @Async("taskExecutor")
+    public CompletableFuture<Playlist> updateAsync(long id,PlaylistDTO playlistDTO, String loggedEmail) throws Exception {
+        return CompletableFuture.completedFuture(update(id,playlistDTO,loggedEmail));
+    }
+
+    //implementacion metodo asincronico para obtener el nombre de una playlist
+    @Override
+    @Async("taskExecutor")
+    public CompletableFuture<String> getNameByIdAsync(long id) {
+        return CompletableFuture.completedFuture(getNameById(id));
     }
 
     @Override
     public Playlist create(PlaylistDTO playlistDTO, String loggedEmail){
-        User userLogged = userRepository.findByEmail(loggedEmail);
+        User userLogged = userService.findByEmail(loggedEmail);
         Playlist playlist = new Playlist();
         playlist.setName(playlistDTO.getName());
         playlist.setUser(userLogged);
@@ -75,58 +92,97 @@ public class PlaylistServiceImp implements PlaylistService{
     }
 
     @Override
-    public void update(long id, PlaylistDTO playlistDTO, String loggedEmail) throws Exception {
-        User userLogged = userRepository.findByEmail(loggedEmail);
-        Playlist playlistBD = playlistRepository.findById(id).get();
-        User ownerPlaylist = userRepository.findById(playlistBD.getUser().getId()).get();
-        if(ownerPlaylist.equals(userLogged)){
-            playlistBD.setName(playlistDTO.getName());
-            playlistRepository.save(playlistBD);
-        } else{
-            throw new Exception("no podes modificar una playlist de la que no sos el dueño");
+    public Playlist update(long id, PlaylistDTO playlistDTO, String loggedEmail) throws Exception {
+        if(playlistRepository.findById(id).isPresent()){
+            Playlist playlistBD = playlistRepository.findById(id).get();
+            if(getOwner(playlistBD).equals(utils.getUserLogged(loggedEmail))){
+                playlistBD.setName(playlistDTO.getName());
+                playlistRepository.save(playlistBD);
+            } else{
+                throw new Exception("no podes modificar una playlist de la que no sos el dueño");
+            }
+            return playlistBD;
+        }
+        else{
+            return null;
         }
     }
 
+    //implementacion metodo asincronico para agregar una cancion a una playlist
     @Override
-    public void addSong(long idPlaylist, Long idSong, String loggedEmail) throws Exception {
-        User userLogged = userRepository.findByEmail(loggedEmail);
-        Playlist playlistBD = playlistRepository.findById(idPlaylist).get();
-        User ownerPlaylist = userRepository.findById(playlistBD.getUser().getId()).get();
-        if(ownerPlaylist.equals(userLogged)){
+    @Async("taskExecutor")
+    public CompletableFuture<Song> addSongAsync(long idPlaylist,Long idSong,String loggedEmail) throws Exception {
+        return CompletableFuture.completedFuture(addSong(idPlaylist,idSong,loggedEmail));
+    }
+
+    @Override
+    public Song addSong(long idPlaylist, Long idSong, String loggedEmail) throws Exception {
+        if(playlistRepository.findById(idPlaylist).isPresent() && songRepository.findById(idSong).isPresent()){
+            Playlist playlistBD = playlistRepository.findById(idPlaylist).get();
             Song song = songRepository.findById(idSong).get();
-            PlaylistsSongs playlistsSongs = new PlaylistsSongs();
-            playlistsSongs.setSong(song);
-            playlistsSongs.setPlaylist(playlistBD);
-            playlistsSongsRepository.save(playlistsSongs);
-        } else {
-            throw new Exception("no podes agregar una cancion a una playlist de la que no sos el dueño");
+            if(getOwner(playlistBD).equals(utils.getUserLogged(loggedEmail))){
+                PlaylistsSongs playlistsSongs = new PlaylistsSongs();
+                playlistsSongs.setSong(song);
+                playlistsSongs.setPlaylist(playlistBD);
+                playlistsSongsRepository.save(playlistsSongs);
+                return song;
+            } else {
+                throw new Exception("no podes agregar una cancion a una playlist de la que no sos el dueño");
+            }
+        }
+        else{
+            return null;
         }
     }
 
+    //implementacion metodo asincronico para borrar una cancion a una playlist
     @Override
-    public void deleteSong(long idPlaylist, long idSong, String loggedEmail) throws Exception {
-        User userLogged = userRepository.findByEmail(loggedEmail);
-        Playlist playlistBD = playlistRepository.findById(idPlaylist).get();
-        User ownerPlaylist = userRepository.findById(playlistBD.getUser().getId()).get();
-        if(ownerPlaylist.equals(userLogged)){
-            Long PkToDelete = this.getIdByPlaylistIdAndSongId(idPlaylist,idSong);
-            playlistsSongsRepository.deleteById(PkToDelete);
-        } else {
-            throw new Exception("no podes borrar una cancion a una playlist de la que no sos el dueño");
-        }
+    @Async("taskExecutor")
+    public CompletableFuture<Song> deleteSongAsync(long idPlaylist,Long idSong,String loggedEmail) throws Exception {
+        return CompletableFuture.completedFuture(deleteSong(idPlaylist,idSong,loggedEmail));
     }
 
     @Override
-    public void delete(long idPlaylist, String loggedEmail) throws Exception {
-        User userLogged = userRepository.findByEmail(loggedEmail);
-        Playlist playlistBD = playlistRepository.findById(idPlaylist).get();
-        User ownerPlaylist = userRepository.findById(playlistBD.getUser().getId()).get();
-        if(ownerPlaylist.equals(userLogged)){
-            this.deletePlaylist(idPlaylist);
-        } else {
-            throw new Exception("no podes borrar una playlist de la que no sos el dueño");
+    public Song deleteSong(long idPlaylist, long idSong, String loggedEmail) throws Exception{
+        if(playlistRepository.findById(idPlaylist).isPresent() && songRepository.findById(idSong).isPresent()){
+            Song song = songRepository.findById(idSong).get();
+            Playlist playlistBD = playlistRepository.findById(idPlaylist).get();
+            if(getOwner(playlistBD).equals(utils.getUserLogged(loggedEmail))){
+                Long PkToDelete = this.getIdByPlaylistIdAndSongId(idPlaylist,idSong);
+                playlistsSongsRepository.deleteById(PkToDelete);
+            } else {
+                throw new Exception("no podes borrar una cancion a una playlist de la que no sos el dueño");
+            }
+            return song;
+        }
+        else{
+            return null;
         }
     }
+
+    //implementacion metodo asincronico para borrar una playlist
+    @Override
+    @Async("taskExecutor")
+    public CompletableFuture<Playlist> deletePlaylistAsync(long idPlaylist,String loggedEmail) throws Exception {
+        return CompletableFuture.completedFuture(delete(idPlaylist,loggedEmail));
+    }
+
+    @Override
+    public Playlist delete(long idPlaylist, String loggedEmail) throws Exception{
+        if(playlistRepository.findById(idPlaylist).isPresent()){
+            Playlist playlistBD = playlistRepository.findById(idPlaylist).get();
+            if(getOwner(playlistBD).equals(utils.getUserLogged(loggedEmail))){
+                this.deletePlaylist(idPlaylist);
+            } else {
+                throw new Exception("no podes borrar una playlist de la que no sos el dueño");
+            }
+            return playlistBD;
+        } else{
+            return null;
+        }
+    }
+
+
 
     @Override
     public String getNameById(long id) {
@@ -150,6 +206,10 @@ public class PlaylistServiceImp implements PlaylistService{
     @Override
     public long getIdByPlaylistIdAndSongId(long plId, long sId){
         return playlistsSongsRepository.getIdByPlaylistIdAndSongId(plId,sId);
+    }
+
+    public User getOwner(Playlist playlist){
+        return userService.findById(playlist.getUser().getId());
     }
 
 }

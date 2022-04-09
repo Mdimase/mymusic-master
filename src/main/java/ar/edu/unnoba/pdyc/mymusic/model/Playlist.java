@@ -18,7 +18,7 @@ public class Playlist {
     @ManyToOne(fetch=FetchType.EAGER)
     private User user;
 
-    @OneToMany(mappedBy = "playlist") //cascade = CascadeType.REMOVE, orphanRemoval = true
+    @OneToMany(mappedBy = "playlist",fetch=FetchType.EAGER) //cascade = CascadeType.REMOVE, orphanRemoval = true
     private List<PlaylistsSongs> playlistsSongs;
 
     public String getName() {

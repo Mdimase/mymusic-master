@@ -19,7 +19,14 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
+    public User findById(long id) {
+        return userRepository.findById(id).get();
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return this.findByEmail(email);
     }
+
+
 }
