@@ -21,25 +21,17 @@ public class SongServiceImp implements SongService {
     @Autowired
     private SongRepository songRepository;
 
-    @Override
-    public List<Song> getSongs() {
-        return songRepository.findAll();
-    }
-
-    @Override
-    public List<Song> getSongsByAuthorGenre(String author, Genre genre) {return songRepository.findByAuthorAndGenre(author,genre);}
-
     //implementacion metodo asincronico para obtener todas las canciones
     @Override
     @Async("taskExecutor")
     public CompletableFuture<List<Song>> getSongsAsync(String author, Genre genre) {
-        return CompletableFuture.completedFuture(getSongsByAuthorGenre(author,genre));
+        return CompletableFuture.supplyAsync(()-> songRepository.findByAuthorAndGenre(author,genre));
     }
 
     @Override
     @Async("taskExecutor")
     public CompletableFuture<List<Song>> getSongsAsync() {
-        return CompletableFuture.completedFuture(getSongs());
+        return CompletableFuture.supplyAsync(()-> songRepository.findAll());
     }
 
     /************************************************************

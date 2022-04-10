@@ -20,12 +20,12 @@ public class MymusicApplication {
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() { return new BCryptPasswordEncoder();}
 
-	//este metodo define el pool de threads para la ejecucion de metodos asincronicos
+	//este metodo define el pool de threads para la ejecucion
 	@Bean("taskExecutor")
 	public Executor getAsyncExecutor(){
 		final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-		executor.setCorePoolSize(200);
-		executor.setMaxPoolSize(2000);
+		executor.setCorePoolSize(8); 	//minimo de hilos
+		executor.setMaxPoolSize(16);	//maximo de hilos
 		executor.setQueueCapacity(200);
 		executor.setThreadNamePrefix("executor-");
 		executor.initialize();

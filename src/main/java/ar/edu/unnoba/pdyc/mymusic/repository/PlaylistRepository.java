@@ -14,11 +14,11 @@ import java.util.List;
 public interface PlaylistRepository extends JpaRepository<Playlist,Long>{
     
     @Query("select s from Playlist p inner join PlaylistsSongs pl on (p.id=pl.playlist.id) inner join Song s on (s.id=pl.song.id) where p.id=:id")
-    public List<Song> getSongsByPlaylistId (@Param("id") long id);
+    List<Song> getSongsByPlaylistId(@Param("id") long id);
 
     @Query ("select p.name from Playlist p where p.id=:id")
-    public String getNameById (@Param("id") long id);
+    String getNameById(@Param("id") long id);
 
     @Query ("select p.user.id from Playlist p where p.id=:id")
-    public long getOwner (@Param("id") long id);
+    long getOwner(@Param("id") long id);
 }

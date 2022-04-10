@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public interface SongService {
-    List<Song> getSongs();
-    List<Song> getSongsByAuthorGenre(String author, Genre genre);
     //metodo asincronico
     CompletableFuture<List<Song>> getSongsAsync(String author, Genre genre);
     CompletableFuture<List<Song>> getSongsAsync();

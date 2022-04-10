@@ -10,5 +10,4 @@ public class PlaylistsSongsDTO {
     public void setId(String id) {
         this.id = id;
     }
-
 }

@@ -29,28 +29,6 @@ public class SongResource {
     @Autowired
     private SongService songService;
 
-    /********************************************
-                    metodos sincronicos
-
-
-    //consultar canciones con filtro por autor y genero
-    //@GET
-    //@Produces(MediaType.APPLICATION_JSON)
-    public Response getSongsByAuthorGenre(@QueryParam("author") String author, @QueryParam("genre") Genre genre) {
-        ModelMapper modelMapper = new ModelMapper();
-        Type listType = new TypeToken<List<SongDTO>>() {
-        }.getType();
-        List<SongDTO> list = modelMapper.map(songService.getSongsByAuthorGenre(author, genre), listType);
-        return Response.ok(list).build();
-    }
-
-    ********************************************/
-
-
-    /********************************************
-                metodos asincronos
-     ********************************************/
-
     //metodo asincronico para obtener todas las canciones con filtro por autor y genero
     @GET
     @Path("/filter")
