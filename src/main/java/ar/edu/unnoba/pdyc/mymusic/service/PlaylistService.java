@@ -3,10 +3,13 @@ package ar.edu.unnoba.pdyc.mymusic.service;
 import ar.edu.unnoba.pdyc.mymusic.dto.PlaylistDTO;
 import ar.edu.unnoba.pdyc.mymusic.model.Playlist;
 import ar.edu.unnoba.pdyc.mymusic.model.Song;
+import ar.edu.unnoba.pdyc.mymusic.model.User;
+
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public interface PlaylistService {
+    User getOwner(Playlist playlist);
     void deletePlaylist(long id);
     Long getIdByPlaylistIdAndSongId(long plId, long sId);
     //metodo asincronico

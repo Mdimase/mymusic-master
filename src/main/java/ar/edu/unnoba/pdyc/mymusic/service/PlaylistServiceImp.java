@@ -160,6 +160,7 @@ public class PlaylistServiceImp implements PlaylistService{
         return playlistsSongsRepository.getIdByPlaylistIdAndSongId(plId,sId);
     }
 
+    @Override
     public User getOwner(Playlist playlist){
         return userService.findById(playlist.getUser().getId());
     }
