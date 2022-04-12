@@ -1,0 +1,20 @@
+
+// no sirve mas por el encrypt de la password
+INSERT INTO public.users(
+	id, email, password)
+	VALUES (1, 'maxi@gmail.com', 'maxi'), (2, 'mati@gmail.com', 'mati') ;
+
+INSERT INTO public.songs(
+	id, author, genre, name,user_id)
+	VALUES (1, 'Luismi', 'ROCK', 'Rosas',1), (2, 'Luismi', 'POP', 'Ella',2), (3, 'Luismi', 'FOLK', 'El',1), (4, 'La Renga', 'ROCK', 'Oscuro Diamante',2),
+	(5,'iron maiden','ROCK','the trooper',1), (6,'los redondos','ROCK','jijiji',1),(7,'ac dc','ROCK','back in black',1);
+
+//no hacen falta, usar los endpoints
+
+INSERT INTO public.playlists(
+	id, name, user_id)
+	VALUES (1, 'Del masi', 1), (2, 'Del Mati', 2);
+
+INSERT INTO public.playlists_songs(
+	id, playlist_id, song_id)
+	VALUES (1, 1, 1), (2, 1, 2), (3, 2, 1), (4, 2, 4);

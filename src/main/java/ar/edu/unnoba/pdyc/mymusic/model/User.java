@@ -21,6 +21,13 @@ public class User implements UserDetails {
 
     private String password;
 
+    public User(){}
+
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
     @Override
     public String getPassword() {
         return password;

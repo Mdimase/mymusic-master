@@ -39,7 +39,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         try {
             AuthenticationRequestDTO auth = new ObjectMapper().readValue(request.getInputStream(),AuthenticationRequestDTO.class);
 
-            System.out.println(new BCryptPasswordEncoder().encode(auth.getPassword()));
+            System.out.println(new BCryptPasswordEncoder().encode(auth.getPassword())); // encriptacion de la password
 
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
