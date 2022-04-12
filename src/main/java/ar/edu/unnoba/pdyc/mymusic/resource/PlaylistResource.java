@@ -45,7 +45,7 @@ DELETE http://localhost:8080/mymusic/playlists/:id            borra una playlist
  */
 
 //el .map(objeto a convertir el cual sirve de fuente de datos, el tipo al que quiero que lo convierta)
-@RestController
+
 @Path("/playlists")
 public class PlaylistResource {
 
