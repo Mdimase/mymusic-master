@@ -13,9 +13,6 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
@@ -27,21 +24,19 @@ import java.util.List;
 
 /*
 *   TO DO
-*   HACER EL SIGNUP ENDPOINT
-*   EL GET ALL PLAYLISTS SI DEVUELVE TODAS O SOLO LAS USER LOGGED?
 *   EL PAGINADO
 *
 * */
 
 /*
-GET http://localhost:8080/mymusic/playlists                   lista de playlists (sin canciones)
-GET http://localhost:8080/mymusic/playlists/:id               info de una playlist (con canciones)
-POST http://localhost:8080/mymusic/playlists                  nueva playlist
-PUT http://localhost:8080/mymusic/playlists/:id               modificar nombre de la playlist = id
-DELETE http://localhost:8080/mymusic/playlists/:id            borra la playlist = id
-POST http://localhost:8080/mymusic/playlists/:id/songs        insertar una cancion en una playlist = id
-DELETE http://localhost:8080/mymusic/playlists/:id/songs/:id            borra una cancion de un playlist
-DELETE http://localhost:8080/mymusic/playlists/:id            borra una playlist
+GET http://localhost:8080/mymusic/app/playlists                   lista de playlists (sin canciones)
+GET http://localhost:8080/mymusic/app/playlists/:id               info de una playlist (con canciones)
+POST http://localhost:8080/mymusic/app/playlists                  nueva playlist
+PUT http://localhost:8080/mymusic/app/playlists/:id               modificar nombre de la playlist = id
+DELETE http://localhost:8080/mymusic/app/playlists/:id            borra la playlist = id
+POST http://localhost:8080/mymusic/app/playlists/:id/songs        insertar una cancion en una playlist = id
+DELETE http://localhost:8080/mymusic/app/playlists/:id/songs/:id            borra una cancion de un playlist
+DELETE http://localhost:8080/mymusic/app/playlists/:id            borra una playlist
  */
 
 //el .map(objeto a convertir el cual sirve de fuente de datos, el tipo al que quiero que lo convierta)
@@ -55,11 +50,25 @@ public class PlaylistResource {
     @Autowired
     private Utils utils;
 
+    /*
     //metodo asincronico para obtener todas las playlists
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public void getPlaylist(@Suspended AsyncResponse response) {
         playlistService.getPlaylistsAsync().thenAccept((list) -> {
+            ModelMapper modelMapper = new ModelMapper();
+            Type listType = new TypeToken<List<PlaylistDTO>>(){}.getType();
+            List<PlaylistDTO> listDto = modelMapper.map(list,listType);
+            response.resume(Response.ok(listDto).build());
+        });
+    }*/
+
+    //metodo asincronico para obtener todas las playlists del usuario logged
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public void getPlaylist(@Suspended AsyncResponse response) {
+        User userLogged = utils.getUserLogged(utils.getEmailLogged());
+        playlistService.getPlaylistsAsync(userLogged).thenAccept((list) -> {
             ModelMapper modelMapper = new ModelMapper();
             Type listType = new TypeToken<List<PlaylistDTO>>(){}.getType();
             List<PlaylistDTO> listDto = modelMapper.map(list,listType);

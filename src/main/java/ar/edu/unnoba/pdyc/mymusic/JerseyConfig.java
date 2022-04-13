@@ -11,7 +11,7 @@ import javax.ws.rs.ApplicationPath;
 
 @Component
 @Configuration
-@ApplicationPath("/mymusic")
+@ApplicationPath("/app")
 public class JerseyConfig extends ResourceConfig
 {
     // listado de resources de la app

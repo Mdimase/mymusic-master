@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import javax.ws.rs.Path;
 import java.util.List;
 
 @Repository("playlistRepository")
@@ -23,4 +22,5 @@ public interface PlaylistRepository extends JpaRepository<Playlist,Long>{
     long getOwner(@Param("id") long id);
 
     Playlist findById(long id);
+    List<Playlist> findByUserId(long userId);
 }

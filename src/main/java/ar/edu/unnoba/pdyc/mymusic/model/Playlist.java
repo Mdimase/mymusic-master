@@ -1,7 +1,5 @@
 package ar.edu.unnoba.pdyc.mymusic.model;
 
-import org.springframework.security.core.parameters.P;
-
 import javax.persistence.*;
 import java.util.List;
 

@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response;
 
 /*
 *
-*   POST http://localhost:8080/mymusic/signup                  registro de usuario
+*   POST http://localhost:8080/mymusic/app/signup                  registro de usuario
 *
 * */
 @Path("/signup")
@@ -28,7 +28,7 @@ public class UserResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void NewUser(@Suspended AsyncResponse response, AuthenticationRequestDTO authDto) {
+    public void NewUser(@Suspended AsyncResponse response, AuthenticationRequestDTO authDto){
         this.userService.newUserAsync(authDto.getEmail(), authDto.getPassword()).handle((res,ex) -> {
             if(res != null){
                 response.resume(Response.status(Response.Status.CREATED).build());

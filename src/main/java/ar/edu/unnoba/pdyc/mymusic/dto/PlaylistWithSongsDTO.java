@@ -1,7 +1,5 @@
 package ar.edu.unnoba.pdyc.mymusic.dto;
 
-import ar.edu.unnoba.pdyc.mymusic.model.Song;
-
 import java.util.List;
 
 public class PlaylistWithSongsDTO {

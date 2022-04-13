@@ -16,12 +16,12 @@ import java.util.List;
 
 /*
                         URI area
-GET http://localhost:8080/mymusic/songs                                 lista de canciones
-GET http://localhost:8080/mymusic/filter/songs?author=value&genre=value        lista de canciones
-GET http://localhost:8080/mymusic/filter/author/songs?author=value                    lista de canciones
-POST http://localhost:8080/mymusic/songs                                nueva cancion
-PUT http://localhost:8080/mymusic/songs/:id                             actualizo la cancion = id
-DELETE http://localhost:8080/mymusic/songs/:id                          borra la cancion = id
+GET http://localhost:8080/mymusic/app/songs?page=value                             lista de canciones
+GET http://localhost:8080/mymusic/app/filter/songs?author=value&genre=value        lista de canciones
+GET http://localhost:8080/mymusic/app/filter/author/songs?author=value                    lista de canciones
+POST http://localhost:8080/mymusic/app/songs                                nueva cancion
+PUT http://localhost:8080/mymusic/app/songs/:id                             actualizo la cancion = id
+DELETE http://localhost:8080/mymusic/app/songs/:id                          borra la cancion = id
  */
 
 @Path("/songs")
@@ -47,7 +47,7 @@ public class SongResource {
     @GET
     @Path("/filter/author")
     @Produces(MediaType.APPLICATION_JSON)
-    public void getSongsByAuthorGenre(@Suspended AsyncResponse response, @QueryParam("author") String author){
+    public void getSongsByAuthor(@Suspended AsyncResponse response, @QueryParam("author") String author){
         songService.getSongsAsync(author).thenAccept((list) -> {
             ModelMapper modelMapper = new ModelMapper();
             Type listType = new TypeToken<List<SongDTO>>(){}.getType();
@@ -60,7 +60,7 @@ public class SongResource {
     @GET
     @Path("/filter/genre")
     @Produces(MediaType.APPLICATION_JSON)
-    public void getSongsByAuthorGenre(@Suspended AsyncResponse response,@QueryParam("genre") Genre genre){
+    public void getSongsByGenre(@Suspended AsyncResponse response,@QueryParam("genre") Genre genre){
         songService.getSongsAsync(genre).thenAccept((list) -> {
             ModelMapper modelMapper = new ModelMapper();
             Type listType = new TypeToken<List<SongDTO>>(){}.getType();
@@ -69,15 +69,21 @@ public class SongResource {
         });
     }
 
-    //metodo asincronico para obtener todas las canciones
+    //metodo asincronico para obtener todas las canciones (con paginacion)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public void getSongsByAuthorGenre(@Suspended AsyncResponse response){
-        songService.getSongsAsync().thenAccept((list) -> {
-            ModelMapper modelMapper = new ModelMapper();
-            Type listType = new TypeToken<List<SongDTO>>(){}.getType();
-            List<SongDTO> listDto = modelMapper.map(list, listType);
-            response.resume(Response.ok(listDto).build());
+    public void getSongs(@Suspended AsyncResponse response,@QueryParam("page") int page){
+        songService.getSongsAsync(page).handle((list,ex) -> {
+            if(ex != null){
+                response.resume(Response.status(Response.Status.BAD_REQUEST).build());
+            }
+            else{
+                ModelMapper modelMapper = new ModelMapper();
+                Type listType = new TypeToken<List<SongDTO>>(){}.getType();
+                List<SongDTO> listDto = modelMapper.map(list, listType);
+                response.resume(Response.ok(listDto).build());
+            }
+            return null;
         });
     }
 

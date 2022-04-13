@@ -35,10 +35,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable().authorizeRequests()
                 //.antMatchers(HttpMethod.POST, "/login").permitAll()      //publico
                 .antMatchers(HttpMethod.POST, "/auth").permitAll()
-                .antMatchers(HttpMethod.POST, "/signup").permitAll()
+                .antMatchers(HttpMethod.POST, "/app/signup").permitAll()
                 .antMatchers("/**").fullyAuthenticated()   //cualquier otra peticion requiere auntenticacion
-                .and()
-                .exceptionHandling().accessDeniedHandler(new AccessDeniedExceptionHandler())
                 .and()
                 // filtros que debera cumplir una peticion para tener acceso al servicio
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))

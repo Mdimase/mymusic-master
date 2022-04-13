@@ -36,11 +36,11 @@ public class PlaylistServiceImp implements PlaylistService{
     @Autowired
     private PlaylistsSongsRepository playlistsSongsRepository;
 
-    //implementacion metodo asincronico para obtener todas las playlists
+    //implementacion metodo asincronico para obtener todas las playlists del usuario logueado
     @Override
     @Async("taskExecutor")
-    public CompletableFuture<List<Playlist>> getPlaylistsAsync() {
-        return CompletableFuture.supplyAsync(()-> playlistRepository.findAll());
+    public CompletableFuture<List<Playlist>> getPlaylistsAsync(User userLogged){
+        return CompletableFuture.supplyAsync(()-> playlistRepository.findByUserId(userLogged.getId()));
     }
 
     //implementacion metodo asincronico para obtener una playlist con sus canciones

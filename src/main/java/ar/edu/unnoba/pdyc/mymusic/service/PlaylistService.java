@@ -17,7 +17,7 @@ public interface PlaylistService {
     void deletePlaylist(long id);
     Long getIdByPlaylistIdAndSongId(long plId, long sId);
     //metodo asincronico
-    CompletableFuture<List<Playlist>> getPlaylistsAsync();
+    CompletableFuture<List<Playlist>> getPlaylistsAsync(User userLogged);
     CompletableFuture<Playlist> createAsync(PlaylistDTO playlistDTO, String loggedEmail);
     CompletableFuture<List<Song>> getSongsByPlaylistIdAsync(long id)throws NotFoundException;
     CompletableFuture<Playlist> updateAsync(long id, PlaylistDTO playlistDTO,User userLogged)throws NotFoundException,UnauthorizedException;

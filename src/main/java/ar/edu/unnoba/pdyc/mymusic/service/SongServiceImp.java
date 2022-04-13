@@ -1,14 +1,14 @@
 package ar.edu.unnoba.pdyc.mymusic.service;
 
 import ar.edu.unnoba.pdyc.mymusic.model.Genre;
-import ar.edu.unnoba.pdyc.mymusic.model.Playlist;
 import ar.edu.unnoba.pdyc.mymusic.model.Song;
-import ar.edu.unnoba.pdyc.mymusic.model.User;
 import ar.edu.unnoba.pdyc.mymusic.repository.SongRepository;
 import ar.edu.unnoba.pdyc.mymusic.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import javax.ws.rs.BadRequestException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -40,8 +40,8 @@ public class SongServiceImp implements SongService {
 
     @Override
     @Async("taskExecutor")
-    public CompletableFuture<List<Song>> getSongsAsync() {
-        return CompletableFuture.supplyAsync(()-> songRepository.findAll());
+    public CompletableFuture<List<Song>> getSongsAsync(int page) throws BadRequestException {
+        return CompletableFuture.supplyAsync(()-> songRepository.getSongsPage(Utils.PAGE_SIZE,Utils.getOffsetPage(page)));
     }
 
     /************************************************************
