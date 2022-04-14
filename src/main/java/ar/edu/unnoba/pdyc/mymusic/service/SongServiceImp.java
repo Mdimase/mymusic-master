@@ -24,23 +24,23 @@ public class SongServiceImp implements SongService {
     //implementacion metodo asincronico para obtener todas las canciones
     @Override
     @Async("taskExecutor")
-    public CompletableFuture<List<Song>> getSongsAsync(String author, Genre genre) {
-        return CompletableFuture.supplyAsync(()-> songRepository.findByAuthorAndGenre(author,genre));
+    public CompletableFuture<List<Song>> getSongsAsync(String author, Genre genre, int page){
+        return CompletableFuture.supplyAsync(()-> songRepository.findByAuthorAndGenrePage(author,genre.toString(),Utils.PAGE_SIZE,Utils.getOffsetPage(page)));
     }
 
     @Override
-    public CompletableFuture<List<Song>> getSongsAsync(String author) {
-        return CompletableFuture.supplyAsync(()-> songRepository.findByAuthor(author));
+    public CompletableFuture<List<Song>> getSongsAsync(String author,int page){
+        return CompletableFuture.supplyAsync(()-> songRepository.findByAuthorPage(author,Utils.PAGE_SIZE,Utils.getOffsetPage(page)));
     }
 
     @Override
-    public CompletableFuture<List<Song>> getSongsAsync(Genre genre) {
-        return CompletableFuture.supplyAsync(()-> songRepository.findByGenre(genre));
+    public CompletableFuture<List<Song>> getSongsAsync(Genre genre,int page) {
+        return CompletableFuture.supplyAsync(()-> songRepository.findByGenrePage(genre.toString(),Utils.PAGE_SIZE,Utils.getOffsetPage(page)));
     }
 
     @Override
     @Async("taskExecutor")
-    public CompletableFuture<List<Song>> getSongsAsync(int page) throws BadRequestException {
+    public CompletableFuture<List<Song>> getSongsAsync(int page){
         return CompletableFuture.supplyAsync(()-> songRepository.getSongsPage(Utils.PAGE_SIZE,Utils.getOffsetPage(page)));
     }
 

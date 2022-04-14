@@ -16,9 +16,7 @@ import java.util.List;
 
 /*
                         URI area
-GET http://localhost:8080/mymusic/app/songs?page=value                             lista de canciones
-GET http://localhost:8080/mymusic/app/filter/songs?author=value&genre=value        lista de canciones
-GET http://localhost:8080/mymusic/app/filter/author/songs?author=value                    lista de canciones
+GET http://localhost:8080/mymusic/app/songs/pageValue?author=value&genre=value      lista de canciones con filtros opcionales
 POST http://localhost:8080/mymusic/app/songs                                nueva cancion
 PUT http://localhost:8080/mymusic/app/songs/:id                             actualizo la cancion = id
 DELETE http://localhost:8080/mymusic/app/songs/:id                          borra la cancion = id
@@ -30,61 +28,40 @@ public class SongResource {
     @Autowired
     private SongService songService;
 
-    //metodo asincronico para obtener todas las canciones con filtro por autor y genero
-    @GET
-    @Path("/filter")
-    @Produces(MediaType.APPLICATION_JSON)
-    public void getSongsByAuthorGenre(@Suspended AsyncResponse response, @QueryParam("author") String author, @QueryParam("genre") Genre genre){
-        songService.getSongsAsync(author,genre).thenAccept((list) -> {
-            ModelMapper modelMapper = new ModelMapper();
-            Type listType = new TypeToken<List<SongDTO>>(){}.getType();
-            List<SongDTO> listDto = modelMapper.map(list, listType);
-            response.resume(Response.ok(listDto).build());
-        });
-    }
-
-    //metodo asincronico para obtener todas las canciones con filtro por autor
-    @GET
-    @Path("/filter/author")
-    @Produces(MediaType.APPLICATION_JSON)
-    public void getSongsByAuthor(@Suspended AsyncResponse response, @QueryParam("author") String author){
-        songService.getSongsAsync(author).thenAccept((list) -> {
-            ModelMapper modelMapper = new ModelMapper();
-            Type listType = new TypeToken<List<SongDTO>>(){}.getType();
-            List<SongDTO> listDto = modelMapper.map(list, listType);
-            response.resume(Response.ok(listDto).build());
-        });
-    }
-
-    //metodo asincronico para obtener todas las canciones con filtro por genre
-    @GET
-    @Path("/filter/genre")
-    @Produces(MediaType.APPLICATION_JSON)
-    public void getSongsByGenre(@Suspended AsyncResponse response,@QueryParam("genre") Genre genre){
-        songService.getSongsAsync(genre).thenAccept((list) -> {
-            ModelMapper modelMapper = new ModelMapper();
-            Type listType = new TypeToken<List<SongDTO>>(){}.getType();
-            List<SongDTO> listDto = modelMapper.map(list, listType);
-            response.resume(Response.ok(listDto).build());
-        });
-    }
-
     //metodo asincronico para obtener todas las canciones (con paginacion)
     @GET
+    @Path("/{page}")
     @Produces(MediaType.APPLICATION_JSON)
-    public void getSongs(@Suspended AsyncResponse response,@QueryParam("page") int page){
-        songService.getSongsAsync(page).handle((list,ex) -> {
-            if(ex != null){
-                response.resume(Response.status(Response.Status.BAD_REQUEST).build());
-            }
-            else{
-                ModelMapper modelMapper = new ModelMapper();
-                Type listType = new TypeToken<List<SongDTO>>(){}.getType();
+    public void getSongs(@Suspended AsyncResponse response,@PathParam("page") int page,@QueryParam("author") String author, @QueryParam("genre") Genre genre){
+        if(page <= 0){
+            response.resume(Response.status(Response.Status.BAD_REQUEST).build());
+        }
+        ModelMapper modelMapper = new ModelMapper();
+        Type listType = new TypeToken<List<SongDTO>>(){}.getType();
+        if(genre==null && author==null){ //sin filtros
+            songService.getSongsAsync(page).thenAccept((list) -> {
                 List<SongDTO> listDto = modelMapper.map(list, listType);
                 response.resume(Response.ok(listDto).build());
-            }
-            return null;
-        });
+            });
+        }
+        else if(genre == null){ // filtro author
+            songService.getSongsAsync(author,page).thenAccept((list) -> {
+                List<SongDTO> listDto = modelMapper.map(list, listType);
+                response.resume(Response.ok(listDto).build());
+            });
+        }
+        else if(author == null){ // filtro genre
+            songService.getSongsAsync(genre,page).thenAccept((list) -> {
+                List<SongDTO> listDto = modelMapper.map(list, listType);
+                response.resume(Response.ok(listDto).build());
+            });
+        }
+        else{ //filtro genre y author
+            songService.getSongsAsync(author,genre,page).thenAccept((list) -> {
+                List<SongDTO> listDto = modelMapper.map(list, listType);
+                response.resume(Response.ok(listDto).build());
+            });
+        }
     }
 
     /*************************

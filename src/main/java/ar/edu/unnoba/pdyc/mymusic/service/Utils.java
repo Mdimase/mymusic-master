@@ -12,7 +12,7 @@ import javax.ws.rs.BadRequestException;
 @Service
 public class Utils {
 
-    public static final Integer PAGE_SIZE = 3;
+    public static final Integer PAGE_SIZE = 2;
 
     @Autowired
     private UserService userService;
@@ -26,10 +26,7 @@ public class Utils {
         return userService.findByEmail(email);
     }
 
-    public static Integer getOffsetPage(Integer page)throws BadRequestException{
-        if(page <= 0){
-            throw new BadRequestException();
-        }
+    public static Integer getOffsetPage(Integer page){
         int offset = 0;
         if(page > 1){
             offset = Utils.PAGE_SIZE * (page - 1);
