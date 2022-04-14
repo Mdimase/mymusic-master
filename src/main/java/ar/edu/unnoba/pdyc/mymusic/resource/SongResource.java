@@ -30,34 +30,30 @@ public class SongResource {
 
     //metodo asincronico para obtener todas las canciones (con paginacion)
     @GET
-    @Path("/{page}")
     @Produces(MediaType.APPLICATION_JSON)
-    public void getSongs(@Suspended AsyncResponse response,@PathParam("page") int page,@QueryParam("author") String author, @QueryParam("genre") Genre genre){
-        if(page <= 0){
-            response.resume(Response.status(Response.Status.BAD_REQUEST).build());
-        }
+    public void getSongs(@Suspended AsyncResponse response,@QueryParam("author") String author, @QueryParam("genre") Genre genre){
         ModelMapper modelMapper = new ModelMapper();
         Type listType = new TypeToken<List<SongDTO>>(){}.getType();
         if(genre==null && author==null){ //sin filtros
-            songService.getSongsAsync(page).thenAccept((list) -> {
+            songService.getSongsAsync().thenAccept((list) -> {
                 List<SongDTO> listDto = modelMapper.map(list, listType);
                 response.resume(Response.ok(listDto).build());
             });
         }
         else if(genre == null){ // filtro author
-            songService.getSongsAsync(author,page).thenAccept((list) -> {
+            songService.getSongsAsync(author).thenAccept((list) -> {
                 List<SongDTO> listDto = modelMapper.map(list, listType);
                 response.resume(Response.ok(listDto).build());
             });
         }
         else if(author == null){ // filtro genre
-            songService.getSongsAsync(genre,page).thenAccept((list) -> {
+            songService.getSongsAsync(genre).thenAccept((list) -> {
                 List<SongDTO> listDto = modelMapper.map(list, listType);
                 response.resume(Response.ok(listDto).build());
             });
         }
         else{ //filtro genre y author
-            songService.getSongsAsync(author,genre,page).thenAccept((list) -> {
+            songService.getSongsAsync(author,genre).thenAccept((list) -> {
                 List<SongDTO> listDto = modelMapper.map(list, listType);
                 response.resume(Response.ok(listDto).build());
             });

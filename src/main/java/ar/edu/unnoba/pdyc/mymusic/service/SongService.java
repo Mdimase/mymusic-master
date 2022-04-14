@@ -9,10 +9,10 @@ import java.util.concurrent.CompletableFuture;
 
 public interface SongService {
     //metodo asincronico
-    CompletableFuture<List<Song>> getSongsAsync(String author, Genre genre,int page)throws BadRequestException;
-    CompletableFuture<List<Song>> getSongsAsync(String author,int page);
-    CompletableFuture<List<Song>> getSongsAsync(Genre genre,int page);
-    CompletableFuture<List<Song>> getSongsAsync(int page);
+    CompletableFuture<List<Song>> getSongsAsync(String author, Genre genre);
+    CompletableFuture<List<Song>> getSongsAsync(String author);
+    CompletableFuture<List<Song>> getSongsAsync(Genre genre);
+    CompletableFuture<List<Song>> getSongsAsync();
 
     /**********************************
     ejemplo de clase

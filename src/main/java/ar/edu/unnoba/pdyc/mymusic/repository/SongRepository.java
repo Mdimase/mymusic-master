@@ -18,17 +18,9 @@ public interface SongRepository extends JpaRepository<Song,Long>{
     List<Song> getSongsByAuthorGenre(@Param("author") String author, @Param("genre") Genre genre);
     */
 
+    /*
     @Query(value = "select * from songs limit ?1 offset ?2",nativeQuery = true)
-    List<Song> getSongsPage(int l,int o);
-
-    @Query(value = "select * from songs where author=?1 and genre=?2 limit ?3 offset ?4",nativeQuery = true)
-    List<Song> findByAuthorAndGenrePage(String author, String genre,int limit,int offset);
-
-    @Query(value = "select * from songs where author=?1 limit ?2 offset ?3",nativeQuery = true)
-    List<Song> findByAuthorPage(String author,int limit,int offset);
-
-    @Query(value = "select * from songs where genre=?1 limit ?2 offset ?3",nativeQuery = true)
-    List<Song> findByGenrePage(String genre,int limit,int offset);
+    List<Song> getSongsPage(int l,int o);*/
 
     List<Song> findByAuthorAndGenre(String author,Genre genre);
     List<Song> findByAuthor(String author);
