@@ -16,7 +16,7 @@ import java.util.List;
 
 /*
                         URI area
-GET http://localhost:8080/mymusic/app/songs/pageValue?author=value&genre=value      lista de canciones con filtros opcionales
+GET http://localhost:8080/mymusic/app/songs/?author=value&genre=value      lista de canciones con filtros opcionales
 POST http://localhost:8080/mymusic/app/songs                                nueva cancion
 PUT http://localhost:8080/mymusic/app/songs/:id                             actualizo la cancion = id
 DELETE http://localhost:8080/mymusic/app/songs/:id                          borra la cancion = id
@@ -28,7 +28,7 @@ public class SongResource {
     @Autowired
     private SongService songService;
 
-    //metodo asincronico para obtener todas las canciones (con paginacion)
+    //metodo asincronico para obtener todas las canciones
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public void getSongs(@Suspended AsyncResponse response,@QueryParam("author") String author, @QueryParam("genre") Genre genre){

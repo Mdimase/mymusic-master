@@ -1,6 +1,7 @@
 package ar.edu.unnoba.pdyc.mymusic.service;
 
 import ar.edu.unnoba.pdyc.mymusic.dto.PlaylistDTO;
+import ar.edu.unnoba.pdyc.mymusic.dto.PlaylistUpdateDTO;
 import ar.edu.unnoba.pdyc.mymusic.exception.NotFoundException;
 import ar.edu.unnoba.pdyc.mymusic.exception.UnauthorizedException;
 import ar.edu.unnoba.pdyc.mymusic.model.Playlist;
@@ -71,7 +72,7 @@ public class PlaylistServiceImp implements PlaylistService{
     //implementacion metodo asincronico para modificar el nombre de una playlist
     @Override
     @Async("taskExecutor")
-    public CompletableFuture<Playlist> updateAsync(long id,PlaylistDTO playlistDTO,User userLogged)throws NotFoundException,UnauthorizedException{
+    public CompletableFuture<Playlist> updateAsync(long id, PlaylistUpdateDTO playlistUpdateDTO, User userLogged)throws NotFoundException,UnauthorizedException{
         return CompletableFuture.supplyAsync(()->{
             if(!playlistRepository.existsById(id)){
                 throw new NotFoundException("Recurso inexistente");
@@ -80,7 +81,7 @@ public class PlaylistServiceImp implements PlaylistService{
             if(!isOwner(playlistBD,userLogged)){
                 throw new UnauthorizedException();
             }
-            playlistBD.setName(playlistDTO.getName());
+            playlistBD.setName(playlistUpdateDTO.getName());
             playlistRepository.save(playlistBD);
             return playlistBD;
         });

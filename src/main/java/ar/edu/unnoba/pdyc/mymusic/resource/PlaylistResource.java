@@ -1,9 +1,6 @@
 package ar.edu.unnoba.pdyc.mymusic.resource;
 
-import ar.edu.unnoba.pdyc.mymusic.dto.PlaylistDTO;
-import ar.edu.unnoba.pdyc.mymusic.dto.PlaylistWithSongsDTO;
-import ar.edu.unnoba.pdyc.mymusic.dto.PlaylistsSongsDTO;
-import ar.edu.unnoba.pdyc.mymusic.dto.SongDTO;
+import ar.edu.unnoba.pdyc.mymusic.dto.*;
 import ar.edu.unnoba.pdyc.mymusic.exception.NotFoundException;
 import ar.edu.unnoba.pdyc.mymusic.exception.UnauthorizedException;
 import ar.edu.unnoba.pdyc.mymusic.model.User;
@@ -92,7 +89,7 @@ public class PlaylistResource {
     public void getPlaylistById(@Suspended AsyncResponse response,@PathParam("id") long id){
         ModelMapper modelMapper = new ModelMapper();
         PlaylistWithSongsDTO playlistWithSongsDTO = new PlaylistWithSongsDTO(); //creo el DTO a retornar
-        Type listSongDTOType = new TypeToken<List<SongDTO>>(){}.getType(); //armo el tipo lista de songsDTO (sin el id)
+        Type listSongDTOType = new TypeToken<List<SongDTO>>(){}.getType();
         playlistService.getNameByIdAsync(id).thenCombine(playlistService.getSongsByPlaylistIdAsync(id), (name,list)->{
             playlistWithSongsDTO.setPlaylistName(name);  // le seteo el nombre de la playlist
             List<SongDTO> listSongsDTO = modelMapper.map(list,listSongDTOType); // creo la lista de songsdto
@@ -109,9 +106,9 @@ public class PlaylistResource {
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void updatePlaylist (@Suspended AsyncResponse response,@PathParam("id")long id,PlaylistDTO playlistDTO){
+    public void updatePlaylist (@Suspended AsyncResponse response, @PathParam("id")long id, PlaylistUpdateDTO playlistUpdateDTO){
         User userLogged = utils.getUserLogged(utils.getEmailLogged());
-        playlistService.updateAsync(id,playlistDTO,userLogged).handle((res,ex) ->{
+        playlistService.updateAsync(id,playlistUpdateDTO,userLogged).handle((res,ex) ->{
             if(res != null){
                 response.resume(Response.ok().build());
             }

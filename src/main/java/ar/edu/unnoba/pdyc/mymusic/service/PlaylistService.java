@@ -1,6 +1,7 @@
 package ar.edu.unnoba.pdyc.mymusic.service;
 
 import ar.edu.unnoba.pdyc.mymusic.dto.PlaylistDTO;
+import ar.edu.unnoba.pdyc.mymusic.dto.PlaylistUpdateDTO;
 import ar.edu.unnoba.pdyc.mymusic.exception.NotFoundException;
 import ar.edu.unnoba.pdyc.mymusic.exception.UnauthorizedException;
 import ar.edu.unnoba.pdyc.mymusic.model.Playlist;
@@ -20,7 +21,7 @@ public interface PlaylistService {
     CompletableFuture<List<Playlist>> getPlaylistsAsync(User userLogged);
     CompletableFuture<Playlist> createAsync(PlaylistDTO playlistDTO, String loggedEmail);
     CompletableFuture<List<Song>> getSongsByPlaylistIdAsync(long id)throws NotFoundException;
-    CompletableFuture<Playlist> updateAsync(long id, PlaylistDTO playlistDTO,User userLogged)throws NotFoundException,UnauthorizedException;
+    CompletableFuture<Playlist> updateAsync(long id, PlaylistUpdateDTO playlistUpdateDTO, User userLogged)throws NotFoundException,UnauthorizedException;
     CompletableFuture<String> getNameByIdAsync(long id)throws NotFoundException;
     CompletableFuture<Song> addSongAsync(long idPlaylist, long idSong,User userLogged)throws NotFoundException,UnauthorizedException, DataIntegrityViolationException;
     CompletableFuture<Song> deleteSongAsync(long idPlaylist, long idSong, User userLogged)throws NotFoundException,UnauthorizedException;
