@@ -2,12 +2,8 @@ package ar.edu.unnoba.pdyc.mymusic.resource;
 
 import ar.edu.unnoba.pdyc.mymusic.dto.AuthenticationRequestDTO;
 import ar.edu.unnoba.pdyc.mymusic.service.UserService;
-import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;

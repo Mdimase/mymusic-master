@@ -21,7 +21,7 @@ public class MymusicApplication {
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() { return new BCryptPasswordEncoder();}
 
-	//este metodo define el pool de threads para la ejecucion
+	//pool de threads para la ejecucion
 	@Bean("taskExecutor")
 	public Executor getAsyncExecutor(){
 		final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();

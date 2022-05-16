@@ -20,24 +20,6 @@ public class Song {
     @OneToMany(mappedBy = "song")
     private List<PlaylistsSongs> playlistsSongs;
 
-
-    /********************************************
-     ejemplo de clase
-
-    //@ManyToOne
-    //@JoinColumn(name = "user_id")
-    private User owner;
-
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
-
-    *********************************************/
-
     public Long getId() {
         return id;
     }

@@ -1,20 +1,6 @@
 
-// no sirve mas por el encrypt de la password
-INSERT INTO public.users(
-	id, email, password)
-	VALUES (1, 'maxi@gmail.com', 'maxi'), (2, 'mati@gmail.com', 'mati') ;
-
 INSERT INTO public.songs(
 	id, author, genre, name,user_id)
-	VALUES (1, 'Luismi', 'ROCK', 'Rosas',1), (2, 'Luismi', 'POP', 'Ella',2), (3, 'Luismi', 'FOLK', 'El',1), (4, 'La Renga', 'ROCK', 'Oscuro Diamante',2),
-	(5,'iron maiden','ROCK','the trooper',1), (6,'los redondos','ROCK','jijiji',1),(7,'ac dc','ROCK','back in black',1);
-
-//no hacen falta, usar los endpoints
-
-INSERT INTO public.playlists(
-	id, name, user_id)
-	VALUES (1, 'Del masi', 1), (2, 'Del Mati', 2);
-
-INSERT INTO public.playlists_songs(
-	id, playlist_id, song_id)
-	VALUES (1, 1, 1), (2, 1, 2), (3, 2, 1), (4, 2, 4);
+	VALUES (1, 'luismi', 'ROCK', 'rosas',1), (2, 'luismi', 'POP', 'ella',2), (3, 'luismi', 'FOLK', 'el',1), (4, 'la Renga', 'ROCK', 'Oscuro Diamante',2),
+	(5,'iron maiden','ROCK','the trooper',1), (6,'los redondos','ROCK','jijiji',1),(7,'ac dc','ROCK','back in black',1),(8, 'la renga', 'ROCK', 'veneno',1), (9, 'michael jackson', 'POP', 'beat it',1), (10, 'soledad', 'FOLK', 'imagina',2), (11, 'La Renga', 'ROCK', 'el terco',1),
+    (12,'mozart','CLASSICAL','las bodas de figaro',1), (13,'beethoven','CLASSICAL','sinfonia 9',2),(14,'soledad','FOLK','eres',1);

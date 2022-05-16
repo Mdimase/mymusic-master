@@ -19,11 +19,6 @@ import javax.ws.rs.core.Response;
 import java.lang.reflect.Type;
 import java.util.List;
 
-/*
-*   TO DO
-*   EL PAGINADO
-*
-* */
 
 /*
 GET http://localhost:8080/mymusic/app/playlists                   lista de playlists (sin canciones)
@@ -35,8 +30,6 @@ POST http://localhost:8080/mymusic/app/playlists/:id/songs        insertar una c
 DELETE http://localhost:8080/mymusic/app/playlists/:id/songs/:id            borra una cancion de un playlist
 DELETE http://localhost:8080/mymusic/app/playlists/:id            borra una playlist
  */
-
-//el .map(objeto a convertir el cual sirve de fuente de datos, el tipo al que quiero que lo convierta)
 
 @Path("/playlists")
 public class PlaylistResource {

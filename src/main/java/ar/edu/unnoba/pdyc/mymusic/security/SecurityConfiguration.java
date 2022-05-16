@@ -21,7 +21,7 @@ import java.util.Collections;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserService userService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;    //para encryptar la password en la BD, y no ponerla en texto plano
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;    //para encryptar la password en la BD
 
     public SecurityConfiguration (UserService userService,BCryptPasswordEncoder bCryptPasswordEncoder ){
         this.userService = userService;
@@ -49,18 +49,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception{
         auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
     }
-
-    /*
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource(){
-        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.applyPermitDefaultValues();
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-        source.registerCorsConfiguration("/**",configuration);
-        return source;
-    } */
-
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
