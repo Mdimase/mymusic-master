@@ -22,6 +22,16 @@ public class Utils {
         return auth.getPrincipal().toString();   //email del usuario loggeado
     }
 
+    public String getEmailLogged(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication(); //contexto de seguridad de spring
+        return auth.getPrincipal().toString();   //email del usuario loggeado
+    }
+
+    // to delete, testing codescene
+    public void testCodeScene(int a, int b, int c, int d, int e, int f, int g, int h, int i){
+        return a + b;
+    }
+
     public User getUserLogged(String email){
         return userService.findByEmail(email);
     }
