@@ -73,7 +73,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         if(a > b){
             if(b != h){
                 for(int j=0;j<10;j++){
-                    return a+b+c+d+e+f+g+h+i+j;
+                    if(true){
+                        a=a+1;
+                    }
+                    else{
+                        while(true){
+                            return a+b+c+d+e+f+g+h+i+j; 
+                        }
+                    }
                 }
             }
         }
