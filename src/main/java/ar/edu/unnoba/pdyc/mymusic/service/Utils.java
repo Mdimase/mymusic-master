@@ -22,22 +22,6 @@ public class Utils {
         return auth.getPrincipal().toString();   //email del usuario loggeado
     }
 
-    // to delete, testing codescene
-    public int testCodeScene(int a, int b, int c, int d, int e, int f, int g, int h, int i){
-        return a + b;
-    }
-
-    // to delete, testing codescene
-    public int testCodeScene2(int a, int b, int c, int d, int e, int f, int g, int h, int i){
-        if(a > b){
-            if(b != h){
-                for(int j=0;j<10;j++){
-                    return a+b+c+d+e+f+g+h+i+j;
-                }
-            }
-        }
-    }
-
     public User getUserLogged(String email){
         return userService.findByEmail(email);
     }
