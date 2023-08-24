@@ -22,6 +22,11 @@ public class Utils {
         return auth.getPrincipal().toString();   //email del usuario loggeado
     }
 
+    public String getEmailLogged(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication(); //contexto de seguridad de spring
+        return auth.getPrincipal().toString();   //email del usuario loggeado
+    }
+
     public User getUserLogged(String email){
         return userService.findByEmail(email);
     }
