@@ -63,28 +63,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return source;
     }
 
-    // to delete, testing codescene
-    public int testCodeScene(int a, int b, int c, int d, int e, int f, int g, int h, int i){
-        return a + b;
-    }
-
-    // to delete, testing codescene
-    public int testCodeScene2(int a, int b, int c, int d, int e, int f, int g, int h, int i){
-        if(a > b){
-            if(b != h){
-                for(int j=0;j<10;j++){
-                    if(true){
-                        a=a+1;
-                    }
-                    else{
-                        while(true){
-                            return a+b+c+d+e+f+g+h+i+j; 
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
 }
