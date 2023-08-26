@@ -34,4 +34,33 @@ public class Utils {
         return offset;
     }
 
+    // to delete
+    
+    public static int test(int a, int b){
+        int c = 1;
+        if(a > 10 && b > 15){
+            for(int i=0;i<10;i++){
+                c+=a;
+                if(c > 100){
+                    c-=b;
+                    if(c == 1000){
+                        break;
+                    }
+                }
+            }
+        }
+        if(a < 10 && b < 15){
+            for(int i=0;i<10;i++){
+                c-=a;
+                if(c < 100){
+                    c+=b;
+                    if(c == 1000){
+                        break;
+                    }
+                }
+            }
+        }
+        return c;
+    }
+
 }
