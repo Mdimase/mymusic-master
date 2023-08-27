@@ -15,15 +15,15 @@ import java.util.concurrent.CompletableFuture;
 public interface PlaylistService {
     User getOwner(Playlist playlist)throws NotFoundException;
     boolean isOwner(Playlist playlist, User userLogged);
-    void deletePlaylist(Long id);
-    Long getIdByPlaylistIdAndSongId(Long plId, Long sId);
+    void deletePlaylist(long id);
+    Long getIdByPlaylistIdAndSongId(long plId, long sId);
     //metodo asincronico
     CompletableFuture<List<Playlist>> getPlaylistsAsync(User userLogged);
     CompletableFuture<Playlist> createAsync(PlaylistDTO playlistDTO, String loggedEmail);
-    CompletableFuture<List<Song>> getSongsByPlaylistIdAsync(Long id)throws NotFoundException;
-    CompletableFuture<Playlist> updateAsync(Long id, PlaylistUpdateDTO playlistUpdateDTO, User userLogged)throws NotFoundException,UnauthorizedException;
-    CompletableFuture<String> getNameByIdAsync(Long id)throws NotFoundException;
-    CompletableFuture<Song> addSongAsync(Long idPlaylist, Long idSong,User userLogged)throws NotFoundException,UnauthorizedException, DataIntegrityViolationException;
-    CompletableFuture<Song> deleteSongAsync(Long idPlaylist, Long idSong, User userLogged)throws NotFoundException,UnauthorizedException;
-    CompletableFuture<Playlist> deletePlaylistAsync(Long idPlaylist,User userLogged)throws NotFoundException,UnauthorizedException;
+    CompletableFuture<List<Song>> getSongsByPlaylistIdAsync(long id)throws NotFoundException;
+    CompletableFuture<Playlist> updateAsync(long id, PlaylistUpdateDTO playlistUpdateDTO, User userLogged)throws NotFoundException,UnauthorizedException;
+    CompletableFuture<String> getNameByIdAsync(long id)throws NotFoundException;
+    CompletableFuture<Song> addSongAsync(long idPlaylist, long idSong,User userLogged)throws NotFoundException,UnauthorizedException, DataIntegrityViolationException;
+    CompletableFuture<Song> deleteSongAsync(long idPlaylist, long idSong, User userLogged)throws NotFoundException,UnauthorizedException;
+    CompletableFuture<Playlist> deletePlaylistAsync(long idPlaylist,User userLogged)throws NotFoundException,UnauthorizedException;
 }
