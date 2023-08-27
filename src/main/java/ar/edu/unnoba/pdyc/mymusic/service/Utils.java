@@ -36,8 +36,8 @@ public class Utils {
 
     // to delete
     
-    public static int test(int a, int b){
-        int c = 1;
+    public static int test(int a, int b,int c, int d, int e, int f){
+        c = 1;
         if(a > 10 && b > 15){
             for(int i=0;i<10;i++){
                 c+=a;
