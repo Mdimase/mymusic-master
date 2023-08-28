@@ -49,11 +49,8 @@ public class Utils {
         if(testObject.a > 10 && testObject.b > 15){
             for(int i=0;i<10;i++){
                 testObject.c+=testObject.a;
-                if(testObject.c > 100){
+                if(testObject.c > 100 && testObject.c != 1000){
                     testObject.c-=testObject.b;
-                    if(testObject.c == 1000){
-                        break;
-                    }
                 }
             }
         }
@@ -63,11 +60,8 @@ public class Utils {
         if(testObject.d < 10 && testObject.e < 15){
             for(int i=0;i<10;i++){
                 testObject.c-=testObject.a;
-                if(testObject.f < 100){
+                if(testObject.f < 100 && testObject.c != 1000){
                     testObject.c+=testObject.b;
-                    if(testObject.c == 1000){
-                        break;
-                    }
                 }
             }
         }
