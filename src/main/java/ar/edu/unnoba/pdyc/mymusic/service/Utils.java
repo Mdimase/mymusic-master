@@ -46,10 +46,10 @@ public class Utils {
 
     private static void f1(TestObject testObject){
         if(testObject.a > 10 && testObject.b > 15){
-            for(int i=0;i<10;i++){
-                testObject.c+=testObject.a;
+            for(int i = 0; i < 10; i++){
+                testObject.c += testObject.a;
                 if(testObject.c > 100 && testObject.c != 1000){
-                    testObject.c-=testObject.b;
+                    testObject.c -= testObject.b;
                 }
             }
         }
@@ -57,10 +57,10 @@ public class Utils {
 
     private static void f2(TestObject testObject){
         if(testObject.d < 10 && testObject.e < 15){
-            for(int i=0;i<10;i++){
-                testObject.c-=testObject.a;
+            for(int i = 0; i < 10; i++){
+                testObject.c -= testObject.a;
                 if(testObject.f < 100 && testObject.c != 2000){
-                    testObject.c+=testObject.b;
+                    testObject.c += testObject.b;
                 }
             }
         }
