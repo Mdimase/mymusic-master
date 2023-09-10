@@ -95,24 +95,16 @@ public class PlaylistResource {
         });
     }
 
-    // modificar el nombre de una playlist
-    @PUT
-    @Path("/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void updatePlaylist (@Suspended AsyncResponse response, @PathParam("id")long id, PlaylistUpdateDTO playlistUpdateDTO){
-        User userLogged = utils.getUserLogged(utils.getEmailLogged());
-        playlistService.updateAsync(id,playlistUpdateDTO,userLogged).handle((res,ex) ->{
-            if(res != null){
-                response.resume(Response.ok().build());
-            }
-            if(ex.getCause() instanceof NotFoundException){
-                response.resume(Response.status(Response.Status.NOT_FOUND).build());
-            }
-            if(ex.getCause() instanceof UnauthorizedException){
-                response.resume(Response.status(Response.Status.UNAUTHORIZED).build());
-            }
-            return null;
-        });
+    private static void manageException(AsyncResponse response,Throwable ex){
+        if(ex.getCause() instanceof NotFoundException){
+            response.resume(Response.status(Response.Status.NOT_FOUND).build());
+        }
+        if(ex.getCause() instanceof UnauthorizedException){
+            response.resume(Response.status(Response.Status.UNAUTHORIZED).build());
+        }
+        if(ex.getCause() instanceof DataIntegrityViolationException){
+            response.resume(Response.status(Response.Status.BAD_REQUEST).build());
+        }
     }
 
     // metodo asincrono para agregar una cancion a una playlist
@@ -126,14 +118,25 @@ public class PlaylistResource {
             if(res!=null){
                 response.resume(Response.status(Response.Status.CREATED).build());
             }
-            if(ex.getCause() instanceof NotFoundException){
-                response.resume(Response.status(Response.Status.NOT_FOUND).build());
+            else{
+                manageException(response,ex);
             }
-            if(ex.getCause() instanceof UnauthorizedException){
-                response.resume(Response.status(Response.Status.UNAUTHORIZED).build());
+            return null;
+        });
+    }
+
+    // modificar el nombre de una playlist
+    @PUT
+    @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void updatePlaylist (@Suspended AsyncResponse response, @PathParam("id")long id, PlaylistUpdateDTO playlistUpdateDTO){
+        User userLogged = utils.getUserLogged(utils.getEmailLogged());
+        playlistService.updateAsync(id,playlistUpdateDTO,userLogged).handle((res,ex) ->{
+            if(res != null){
+                response.resume(Response.ok().build());
             }
-            if(ex.getCause() instanceof DataIntegrityViolationException){
-                response.resume(Response.status(Response.Status.BAD_REQUEST).build());
+            else{
+                manageException(response,ex);
             }
             return null;
         });
@@ -148,11 +151,8 @@ public class PlaylistResource {
             if(res != null){
                 response.resume(Response.ok().build());
             }
-            if(ex.getCause() instanceof NotFoundException){
-                response.resume(Response.status(Response.Status.NOT_FOUND).build());
-            }
-            if(ex.getCause() instanceof UnauthorizedException){
-                response.resume(Response.status(Response.Status.UNAUTHORIZED).build());
+            else{
+                manageException(response,ex);
             }
             return null;
         });
@@ -167,11 +167,8 @@ public class PlaylistResource {
             if(res != null){
                 response.resume(Response.ok().build());
             }
-            if(ex.getCause() instanceof NotFoundException){
-                response.resume(Response.status(Response.Status.NOT_FOUND).build());
-            }
-            if(ex.getCause() instanceof UnauthorizedException){
-                response.resume(Response.status(Response.Status.UNAUTHORIZED).build());
+            else{
+                manageException(response,ex);
             }
             return null;
             });
