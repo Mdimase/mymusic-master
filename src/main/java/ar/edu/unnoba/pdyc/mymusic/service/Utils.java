@@ -42,21 +42,21 @@ public class Utils {
             for(int i = 0; i < 10; i++){
                 c += a;
                 if(c > 100){
-                    c -= b;
                     if(c == 1000){
                         break;
                     }
+                    c -= b;
                 }
             }
         }
         if(a < 10 && b < 15){
             for(int i = 0; i < 10; i++){
                 c -= a;
-                if(c < 100){
-                    c += b;
+                if(c > 100){
                     if(c == 2000){
                         break;
                     }
+                    c += b;
                 }
             }
         }
