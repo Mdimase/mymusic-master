@@ -64,11 +64,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     // test error code scene quality gate
-    public static int validateGate(int a,int b, int c){
+    public static int validateGate(int a,int b, int c,int d, int e, int f){
         if(a > 10 && b < 15) {
             for (int i = 0; i < 10; i++) {
                 c += a;
-                if (c > 100 && c!= 1000) {
+                if (c > 100) {
+                    if (c == 1000) {
+                        break;
+                    }
                     c -= b;
                 }
             }
