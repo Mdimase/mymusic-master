@@ -34,6 +34,7 @@ public class Utils {
         return offset;
     }
 
+    // codigo con errores, estado inicial
     public static int test(int a,int b, int c,int d, int e, int f){
         c = 1;
         if(a > 10 && b < 15){
