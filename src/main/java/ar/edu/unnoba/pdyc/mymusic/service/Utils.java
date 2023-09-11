@@ -34,31 +34,43 @@ public class Utils {
         return offset;
     }
 
-    public static int test(int a,int b, int c,int d, int e, int f){
-        c = 1;
-        if(a > 10 && b < 15){
+    // solucion code scene
+    private static class TestObject{
+        int a;
+        int b;
+        int c;
+        int d;
+        int e;
+        int f;
+    }
+
+    private static void f1(TestObject testObject){
+        if(testObject.a > 10 && testObject.b > 15){
             for(int i = 0; i < 10; i++){
-                c += a;
-                if(c > 100){
-                    if(c == 1000){
-                        break;
-                    }
-                    c -= b;
+                testObject.c += testObject.a;
+                if(testObject.c > 100 && testObject.c != 1000){
+                    testObject.c -= testObject.b;
                 }
             }
         }
-        if(a < 10 && b < 15){
+    }
+
+    private static void f2(TestObject testObject){
+        if(testObject.d < 10 && testObject.e < 15){
             for(int i = 0; i < 10; i++){
-                c -= a;
-                if(c > 100){
-                    if(c == 2000){
-                        break;
-                    }
-                    c += b;
+                testObject.c -= testObject.a;
+                if(testObject.f < 100 && testObject.c != 2000){
+                    testObject.c += testObject.b;
                 }
             }
         }
-        return c;
+    }
+
+    private static int test(TestObject testObject){
+        testObject.c = 1;
+        f1(testObject);
+        f2(testObject);
+        return testObject.c;
     }
 
 }
