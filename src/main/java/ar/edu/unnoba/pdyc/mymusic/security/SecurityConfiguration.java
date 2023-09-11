@@ -63,4 +63,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return source;
     }
 
+    // test error code scene quality gate
+    public static int validateGate(int a,int b, int c,int d, int e, int f){
+        if(a > 10 && b < 15) {
+            for (int i = 0; i < 10; i++) {
+                c += a;
+                if (c > 100) {
+                    if (c == 1000) {
+                        break;
+                    }
+                    c -= b;
+                }
+            }
+        }
+        return c;
+    }
+
 }
