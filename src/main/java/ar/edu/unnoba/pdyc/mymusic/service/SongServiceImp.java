@@ -44,6 +44,11 @@ public class SongServiceImp implements SongService {
         return CompletableFuture.supplyAsync(()-> songRepository.findAll());
     }
 
+    // testing code scene
+    public static void test(int a, int b, int c, int d, int e, int f){
+        System.out.println("Testing");
+    }
+
     /************************************************************
     ejemplo de clase
     @Override

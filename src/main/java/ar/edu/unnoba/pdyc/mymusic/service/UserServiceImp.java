@@ -47,5 +47,9 @@ public class UserServiceImp implements UserService{
         return this.findByEmail(email);
     }
 
+    // testing code scene
+    public static void test(int a, int b, int c, int d, int e, int f){
+        System.out.println("Testing");
+    }
 
 }
